@@ -1,11 +1,16 @@
 import React, { ChangeEvent, FormEvent, useState, FocusEvent } from 'react';
 
-const SimpleInput = () => {
-  const [enteredName, setEnteredName] = useState<string>('');
-  const [enteredNameTouched, setEnteredNameTouched] = useState<boolean>(false);
+import useInput from '../hooks/useInput';
 
-  const enteredNameIsValid = enteredName.trim() !== '';
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+const SimpleInput = () => {
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput,
+  } = useInput((value) => value.trim() !== '');
 
   let formIsValid = false;
 
@@ -15,29 +20,17 @@ const SimpleInput = () => {
     formIsValid = false;
   }
 
-  const nameInputBlurHandler = (event: FocusEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setEnteredNameTouched(true);
-  };
-
-  const nameInputChangeHandker = (event: ChangeEvent<HTMLInputElement>) => {
-    setEnteredName(event.target.value);
-  };
-
   const formSubmitHandler = (event: FormEvent) => {
     event?.preventDefault();
 
-    setEnteredNameTouched(true);
     if (!enteredNameIsValid) {
       return;
     }
 
-    console.log(enteredName);
-    setEnteredName('');
-    setEnteredNameTouched(false);
+    resetNameInput();
   };
 
-  const nameInputClasses = nameInputIsInvalid
+  const nameInputClasses = nameInputHasError
     ? 'form-control invalid'
     : 'form-control';
 
@@ -48,11 +41,11 @@ const SimpleInput = () => {
         <input
           type="text"
           id="name"
-          onChange={nameInputChangeHandker}
-          onBlur={nameInputBlurHandler}
+          onChange={nameChangeHandler}
+          onBlur={nameBlurHandler}
           value={enteredName}
         />
-        {nameInputIsInvalid && (
+        {nameInputHasError && (
           <p className="error-text">Name must not be empty.</p>
         )}
       </div>
