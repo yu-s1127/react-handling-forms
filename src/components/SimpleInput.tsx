@@ -7,6 +7,14 @@ const SimpleInput = () => {
   const enteredNameIsValid = enteredName.trim() !== '';
   const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
+  let formIsValid = false;
+
+  if (enteredNameIsValid) {
+    formIsValid = true;
+  } else {
+    formIsValid = false;
+  }
+
   const nameInputBlurHandler = (event: FocusEvent<HTMLInputElement>) => {
     event.preventDefault();
     setEnteredNameTouched(true);
@@ -49,7 +57,7 @@ const SimpleInput = () => {
         )}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
