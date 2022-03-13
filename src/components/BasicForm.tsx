@@ -97,7 +97,7 @@ const BasicForm = () => {
             onChange={emailChangeHandler}
             onBlur={emailBlurHandler}
           />
-          {lastNameHasError && (
+          {emailHasError && (
             <p className="error-text">Please enter a valid email address.</p>
           )}
         </div>
